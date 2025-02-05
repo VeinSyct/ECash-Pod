@@ -1,0 +1,67 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="op-buttons">
+        <div class="calc-back calc-black-button keyboard"><i class="fa fa-edit"></i></div>
+        <div class="calc-close calc-red-button currency"><i class="fa fa-money"></i></div>    
+    </div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-display-cont">
+        <div class="calc-display-information">
+            <p>Name: <strong class="account-name"></strong></p>
+            <p><i class="fa fa-credit-card"></i> <span class="account-number"></span></p>
+            <p><i class="fa fa-link"></i> <span class="account-protocol"></span></p>
+            <p><i class="fa fa-money"></i> <span class="account-currency"></span></p>
+        </div>
+    </div>
+</div>
+<div id="api-404" hidden></div>
+<script src="./assets/js/index.js"></script>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    openApp = (d) => {
+        readAccount();
+    };
+    _uz.e = document.querySelector(".op-buttons").getElementsByTagName("div");
+    for (let k in _uz.e) {
+        if (_uz.e[k] && _uz.e[k].className) {
+            _uz.e[k].addEventListener("click", (e) => {
+                loadPage({ shells: _uz.e[k].className.match(/(currency)/) ? ["currency"] : ["keyboard"], scroll: 0 });
+            });
+        };
+    };
+    _uz.z = { qrScan: { arr: [], hashes: [] }, digit: { height: 12 }, slider: { single: {} } };
+    _uz.qr = { length: 72, delay: 128, interval: 0, hash: "9h65t34t31p7s&83*4392*81839e5c732a8181sh232%ic421o232n490s$321w23e59b$a472p921p" };
+    document.getElementById("api-404").appendChild(_uz.api);
+    _uz.qrhash({ hash: _uz.qr.hash });
+</script>

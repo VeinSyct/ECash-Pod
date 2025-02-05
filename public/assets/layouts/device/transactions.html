@@ -1,0 +1,117 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-transactions-cont">
+        <div class="tx-receipt"></div>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    onWindowResize = (d) => {
+        //
+    },
+    loadTransactions = (d) => {
+        if (localStorage.transactions) {
+            try {
+                d.tx = JSON.parse(localStorage.transactions);
+                d.ts = "";
+                for (k in d.tx)
+                    d.ts = txCard({ k: k, tx: d.tx[k] }) + d.ts;
+                d.e = document.querySelector(".tx-receipt");
+                if (d.e) d.e.innerHTML = d.ts;
+            } catch (error) {}
+        }
+    },
+    txCard = (d) => {
+        return`
+            <div id="down-${d.k}" class="calc-transaction-cont" onclick="setTimeout(() => { if (!_uz.download) document.getElementById('${d.k}').style.display='flex' }, 120)">
+                <h1 class="icon-button" onclick="">${d.tx.currency} ${d.tx.amount}</h1>
+                <h3><i class="fa fa-user"></i> ${d.tx.incoming ? "From" : "To"} <strong>${d.tx.name}</strong></h3>
+                <p><i class="fa fa-credit-card"></i> <strong>${d.tx.number}</strong></p>
+                <p>Date: <strong>${d.tx.date}</strong></p>
+                <span class="calc-buttons-cont" id="${d.k}">
+                    <span onclick="downloadReciept({ n: '${d.tx && d.tx.number ? d.tx.number : (Math.random() + 1).toString(36).substring(7)}', id: '${d.k}' })">
+                        <i class="fa fa-download"></i> Download
+                    </span>
+                    <span onclick="showQRCode({ k: '${d.k}' })">
+                        <i class="fa fa-qrcode"></i> Show QR
+                    </span>    
+                </span>
+            </div>`;
+    },
+    showQRCode = (d) => {
+        if (localStorage.transactions) {
+            try {
+                d.tx = JSON.parse(localStorage.transactions);
+                localStorage.showqr = d.tx[d.k].hash;
+                loadPage({ shells: ["showqr"], scroll: 0 });
+            } catch (error) {}
+        }
+    };
+    _uz = { e: document.querySelector(".calc-close") };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: ["settings", "home", "options"], scroll: 2 });
+        });
+    };
+    window.downloadReciept = (d) => {
+        _uz.download = !0;
+        d.e = document.createElement("script");
+        d.e.onload = () => {
+            d.x = document.getElementById(`down-${d.id}`);
+            d.x.noShow = !0;
+            document.getElementById(`${d.id}`).style.display = "none";
+            html2canvas(d.x).then((canvas) => {
+                d.l = document.createElement("a");
+                d.l.href = canvas.toDataURL("image/png;base64");
+                d.l.download = d.n + ".jpg";
+                d.x.appendChild(d.l);
+                d.l.click();
+                d.x.removeChild(d.l);
+                for (let i = 0, j = document.getElementsByTagName("script"); i < j.length; i++)
+                    if (j[i].src && j[i].src.toString().match(/(html2canvas.js)/))
+                        j[i].parentNode.removeChild(j[i]);
+                setTimeout(() => { delete _uz.download }, 1200);
+            });
+        };
+        d.e.src = "assets/js/html2canvas.js";
+        document.body.appendChild(d.e);
+    };
+    window.addEventListener("resize", () => {
+        onWindowResize({});
+    });
+    onWindowResize({});
+    loadTransactions({});
+</script>

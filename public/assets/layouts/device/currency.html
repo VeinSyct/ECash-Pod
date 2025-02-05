@@ -1,0 +1,243 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-currency-cont"></div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    onWindowResize = (d) => {
+        listCurrency({ i: 0, dom: "", m: window.innerWidth > window.innerHeight ? 6 : 2 });
+    },
+    listCurrency = (d) => {
+        for (let k in _uz.language) {
+            d.dom += `<div class="calc-button ${k.match(/(USD|EUR|AED|PHP)/) ? "calc-red-button" : ""}" onclick="currencyChanged({ currency: this.innerHTML })">${k}</div>`;
+            if (d.i > d.m) d.dom += `</div><div class="calc-keypad">`;
+            d.i = d.i > d.m ? 0 : d.i + 1;
+        }
+        d.e = document.querySelector(".calc-currency-cont");
+        if (d.e) d.e.innerHTML = `<div class="calc-keypad">${d.dom}</div>`;
+    },
+    currencyChanged = (d) => {
+        localStorage.entry = JSON.stringify({ currency: d.currency });
+        localStorage.dialog = JSON.stringify({
+            message: `
+                You have changed the currency to <strong>${d.currency}</strong>`,
+            buttons: `
+                <div class="_button-back calc-button ">❮ Back</div>
+                <div class="_button-dismiss calc-button calc-red-button">Dismiss</div>`,
+            actions: {
+                back: {
+                    shells: ["currency"],
+                    index: 0
+                },
+                dismiss: {
+                    shells: ["settings", "home", "options"],
+                    index: 0
+                }
+            },
+            close: {
+                shells: ["settings", "home", "options"],
+                index: 0
+            }
+        });
+        loadPage({ shells: ["dialog"], scroll: 0 });
+    },
+    _uz = {
+        e: document.querySelector(".calc-close"),
+        language: {
+            USD: "en-US-POSIX",
+            EUR: "en-DE",
+            AED: "ar-AE",
+            PHP: "es-PH",
+            AFN: "ps-AF",
+            ALL: "sq-AL",
+            AMD: "hy-AM",
+            ANG: "nl-CW",
+            AOA: "ln-AO",
+            ARS: "es-AR",
+            AUD: "en-AU",
+            AWG: "nl-AW",
+            AZN: "az-Cyrl-AZ",
+            BAM: "bs-Cyrl-BA",
+            BBD: "en-BB",
+            BDT: "bn-BD",
+            BGN: "bg-BG",
+            BHD: "ar-BH",
+            BIF: "rn-BI",
+            BMD: "en-BM",
+            BND: "ms-Latn-BN",
+            BOB: "es-BO",
+            BRL: "pt-BR",
+            BSD: "en-BS",
+            BTN: "dz-BT",
+            BWP: "en-BW",
+            BYR: "ru-BY",
+            BZD: "en-BZ",
+            CAD: "fr-CA",
+            CDF: "lu-CD",
+            CHF: "rm-CH",
+            CLP: "es-CL",
+            CNY: "ii-CN",
+            COP: "es-CO",
+            CRC: "es-CR",
+            CUP: "es-CU",
+            CVE: "pt-CV",
+            CZK: "en-CZ",
+            DJF: "ar-DJ",
+            DKK: "da-DK",
+            DOP: "es-DO",
+            DZD: "kab-DZ",
+            EGP: "ar-EG",
+            ERN: "ar-ER",
+            ETB: "om-ET",
+            FJD: "en-FJ",
+            FKP: "en-FK",
+            GBP: "en-GB",
+            GEL: "ka-GE",
+            GHS: "ak-GH",
+            GGP: "en-GG",
+            GIP: "en-GI",
+            GMD: "en-GM",
+            GNF: "fr-GN",
+            GTQ: "es-GT",
+            GYD: "en-GY",
+            HKD: "zh-Hans-HK",
+            HNL: "es-HN",
+            HRK: "hr-HR",
+            HTG: "fr-HT",
+            HUF: "en-HU",
+            IDR: "id-ID",
+            ILS: "ar-IL",
+            INR: "kok-IN",
+            IQD: "ar-IQ",
+            IRR: "fa-IR",
+            ISK: "en-IS",
+            JMD: "en-JM",
+            JOD: "ar-JO",
+            JPY: "ja-JP",
+            KES: "saq-KE",
+            VCY: "en-US",
+            KGS: "ru-KG",
+            KHR: "km-KH",
+            KMF: "ar-KM",
+            KPW: "ko-KP",
+            KRW: "ko-KR",
+            KWD: "ar-KW",
+            KYD: "en-KY",
+            KZT: "kk-Cyrl-KZ",
+            LAK: "lo-LA",
+            LBP: "ar-LB",
+            LKR: "ta-LK",
+            LRD: "vai-Latn-LR",
+            LSL: "en-LS",
+            LTL: "en-LT",
+            LVL: "en-LV",
+            LYD: "ar-LY",
+            MAD: "ar-MA",
+            MDL: "ru-MD",
+            MGA: "mg-MG",
+            MKD: "sq-MK",
+            MMK: "my-MM",
+            MNT: "mn-Cyrl-MN",
+            MOP: "zh-Hant-MO",
+            MRO: "ar-MR",
+            MUR: "en-MU",
+            MWK: "en-MW",
+            MXN: "es-MX",
+            MYR: "ms-Latn-MY",
+            MZN: "mgh-MZ",
+            NAD: "naq-NA",
+            NGN: "ha-Latn-NG",
+            NIO: "es-NI",
+            NOK: "nn-NO",
+            NPR: "ne-NP",
+            NZD: "en-NZ",
+            OMR: "ar-OM",
+            PAB: "es-PA",
+            PEN: "es-PE",
+            PGK: "en-PG",
+            PKR: "pa-Arab-PK",
+            PLN: "en-PL",
+            PYG: "es-PY",
+            QAR: "ar-QA",
+            RON: "en-RO",
+            RSD: "sr-Latn-RS",
+            RUB: "ru-RU",
+            RWF: "rw-RW",
+            SAR: "ar-SA",
+            SBD: "en-SB",
+            SCR: "en-SC",
+            SDG: "ar-SD",
+            SEK: "sv-SE",
+            SGD: "ms-Latn-SG",
+            SHP: "en-SH",
+            SLL: "en-SL",
+            SOS: "ar-SO",
+            SRD: "nl-SR",
+            STD: "pt-ST",
+            SYP: "ar-SY",
+            SZL: "en-SZ",
+            THB: "th-TH",
+            TJS: "tg-Cyrl-TJ",
+            TMT: "tk-Latn-TM",
+            TND: "ar-TN",
+            TOP: "to-TO",
+            TRY: "tr-TR",
+            TTD: "en-TT",
+            TWD: "zh-Hant-TW",
+            TZS: "sw-TZ",
+            UAH: "ru-UA",
+            UGX: "teo-UG",
+            UYU: "es-UY",
+            UZS: "uz-Cyrl-UZ",
+            VEF: "es-VE",
+            VND: "vi-VN",
+            VUV: "en-VU",
+            WST: "en-WS",
+            YER: "ar-YE",
+            ZAR: "en-LS",
+            ZMW: "af-ZA"
+        }
+    };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: ["settings", "home", "options"], scroll: 0 });
+        });
+    };
+    window.addEventListener("resize", () => {
+        onWindowResize({});
+    });
+    onWindowResize({});
+</script>

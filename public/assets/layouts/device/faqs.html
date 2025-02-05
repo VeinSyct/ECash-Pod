@@ -1,0 +1,126 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+</div>
+<div class="calc-center">
+    <div class="calc-display-faqs"></div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    getFaqs = (d) => {
+        for (let i = 0, j = [
+            {
+                title: `What is the ${d.brand ? d.brand : "Brand"}?`,
+                content: `The ${d.brand ? d.brand : "Brand"} is an easy to use offline electronic cash platform for web browser or hybrid mobile apps.
+                    <p><strong>Note:</strong> the electronic data is non transferrable or transportable.</p>
+                    <p><strong>Caution:</strong> the electronic cash data stays only in the web browser it resides, attempting to duplicate the data on multiple device to multiply the electronic cash will not be valid and will be verified as counterfeits.</p>`,
+            },
+            {
+                title: `How does it store electronic cash?`,
+                content: `The ${d.brand ? d.brand : "Brand"} stores the electronic cash data in the web browser's local storage in text format.`,
+            },
+            {
+                title: `What if I cleared my browser?`,
+                content: `The ${d.brand ? d.brand : "Brand"} uses only the web browser's local storage and nothing is stored in any online database server(s).
+                    <p><strong>Note:</strong> the electronic cash is non transferrable or transportable between browsers like files or database datas.</p>
+                    <p><strong>Caution:</strong> should there be an event the user clears the web browser's local storage by reckless action or by accident, the ${d.brand ? d.brand : "Brand"} will not be held liable, the user is resposible in maintaining the web browser's local storage.</p>
+                    <p>If you have stored your electronic cash on a web browser then take the web browser's local storage seriously.</p>`,
+            },
+            {
+                title: `What if I lost my device or my device failed?`,
+                content: `The ${d.brand ? d.brand : "Brand"} stores electronic cash data in the devices web browser's local storage and there is no backup on any online database server(s).
+                    <p><strong>Note:</strong> the electronic cash data is non transferrable or transportable between devices.</p>
+                    <p>If you have stored your electronic cash on a device then don't allow that device to be lost or stolen, it is only natural to secure the device.</p>`,
+            },
+            {
+                title: `How does it work?`,
+                content: `The ${d.brand ? d.brand : "Brand"} transfers electronic cash via QR code that is displayed on the device screen and scanned using the device cameras.`,
+            },
+            {
+                title: `How secured is the electronic cash?`,
+                content: `The ${d.brand ? d.brand : "Brand"} stores electronic cash data in text format in the browser's local storage.
+                    <p><strong>Note:</strong> the electronic cash data is hashed and verified that it has not been tampered during transactions, if a duplicated is transferred the beneficiary device will not accept counterfeits.</p>`,
+            },
+            {
+                title: `Should I be worried?`,
+                content: `The ${d.brand ? d.brand : "Brand"}'s electronic cash data is non trasperable or transportable, it will only be working data on the web browser it resides, even in an event of data breach where the data is obtained or copied to another device or web browser, the electronic cash data is useless and cannot be spent.
+                    <p><strong>However</strong> if someone managed to reach your data and erased your data from your web browser or device, the ${d.brand ? d.brand : "Brand"} will not be held liable for the remote data loss.</p>`,
+            },
+            {
+                title: `Should I edit the link settings?`,
+                content: `The ${d.brand ? d.brand : "Brand"}'s electronic cash data is placed randomly within the quantum simulation dimension for each account, that can be located for data access using the quantum link settings stored in your browser's local storage.
+                    <p><strong>Caution</strong> if the settings is edited and then restored the routes will not be guaranteed to locate your electronic cash data, this will cause a permanent disconnection to your electronic cash.</p>`,
+            },
+        ]; i < j.length; i++) {
+            d.faqs += getFaqsFrame({
+                i: i + 1,
+                title: j[i].title,
+                content: j[i].content,
+            });
+        }
+        return`
+            <div>
+                <div>
+                    <h1>FAQS</h1>
+                    ${d.faqs}
+                </div>
+            </div>`;
+    },
+    getFaqsFrame = (d) => {
+        return`
+            <div class="faq-drawer">
+                <input class="faq-drawer__trigger" id="faq-drawer-${d.i}" type="checkbox" />
+                <label class="faq-drawer__title" for="faq-drawer-${d.i}">${d.title}</label>
+                <div class="faq-drawer__content-wrapper">
+                    <div class="faq-drawer__content">
+                        <p>
+                            ${d.content}
+                        </p>
+                    </div>
+                </div><br>
+            </div>`;
+    },
+    _uz = { e: document.querySelector(".calc-close"), touch: window.matchMedia("(any-hover: none)").matches };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            window.parent.postMessage({
+                id: window.frameElement.id,
+                action: "restore-shells",
+                tag: "iframe"
+            });
+        });
+    };
+    document.querySelector(".calc-display-faqs").innerHTML = getFaqs({ brand: "<strong>Eℂash Pod</strong>", faqs: "" });
+</script>

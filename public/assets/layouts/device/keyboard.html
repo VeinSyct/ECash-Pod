@@ -1,0 +1,211 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-display-cont">
+        <div class="calc-display-backing"></div>
+    </div>
+    <div class="calc-keypad">
+        <div class="calc-button">A<p>BC1</p></div>
+        <div class="calc-button">D<p>EF2</p></div>
+        <div class="calc-button">G<p>HI3</p></div>
+        <div class="calc-button">J<p>KL4</p></div>
+        <div class="calc-button calc-black-button">⌫</div>
+    </div>
+    <div class="calc-keypad">
+        <div class="calc-button">M<p>NO5</p></div>
+        <div class="calc-button">P<p>QR6</p></div>
+        <div class="calc-button">S<p>TU7</p></div>
+        <div class="calc-button">V<p>WX8</p></div>
+        <div class="calc-button calc-black-button">✖</div>
+    </div>
+    <div class="calc-keypad">
+        <div class="calc-button calc-red-button">⇩</div>
+        <div class="calc-button">Y<p>Z_9</p></div>
+        <div class="calc-button">-<p>+=0</p></div>
+        <div class="calc-button">.<p>,*/</p></div>
+        <div class="calc-button calc-red-button">⏎</div>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    onWindowResize = (d) => {
+        _uz.key.touch = window.matchMedia("(any-hover: none)").matches;
+    },
+    acceptEntry = (d) => {
+        if (d.n.length > 3) {
+            localStorage.entry = JSON.stringify({ name: d.n });
+            localStorage.dialog = JSON.stringify({
+                message: `
+                    You have changed your name to <strong>${d.n}</strong>`,
+                buttons: `
+                    <div class="_button-edit calc-button calc-black-button">❮ Edit</div>
+                    <div class="_button-dismiss calc-button calc-red-button">Dismiss</div>`,
+                actions: {
+                    edit: {
+                        shells: ["keyboard"],
+                        index: 0
+                    },
+                    dismiss: {
+                        shells: ["settings", "home", "options"],
+                        index: 0
+                    }
+                },
+                close: {
+                    shells: ["settings", "home", "options"],
+                    index: 0
+                }
+            });
+        } else localStorage.dialog = JSON.stringify({
+            message: `
+                ${d.n != "" ? `<strong>${d.n}</strong> is to short` : "You can not enter a blank name"}`,
+            buttons: `
+                <div class="_button-back calc-button calc-black-button">❮ Back</div>
+                <div class="_button-cancel calc-button ">Cancel</div>`,
+            actions: {
+                back: {
+                    shells: ["keyboard"],
+                    index: 0
+                },
+                cancel: {
+                    shells: ["settings", "home", "options"],
+                    index: 0
+                }
+            },
+            close: {
+                shells: ["settings", "home", "options"],
+                index: 0
+            }
+        });
+        loadPage({ shells: ["dialog"], scroll: 0 });
+    },
+    toggleCase = (e) => {
+        e.e = document.getElementsByClassName("calc-button");
+        if (e.e)
+            for (let k in e.e)
+                if (_uz.e[k].className) {
+                    e.e[k].innerHTML = e.e[k].innerHTML[`to${e.ud}Case`]();
+                    if (e.e[k].innerHTML == "⇩") {
+                        e.e[k].innerHTML = "⇧";
+                    } else if (e.e[k].innerHTML == "⇧") e.e[k].innerHTML = "⇩";
+                }  
+    },
+    tapKey = (e) => {
+        e.c = e.target.innerHTML.replace(/<[^>]*>?/gm, '');
+        e.n = document.querySelector(".calc-display-backing").innerHTML;
+        if (e.c && e.c.match(/(⌫|✖|⇧|⇩|⏎| )/)) {
+            if (e.c == "⌫") e.n = e.n.slice(0, e.n.length - 1);
+            if (e.c == "✖") e.n = "";
+            if (e.c.match(/(⇧|⇩)/)) toggleCase({ n: e.n, ud: e.c.match(/(⇧)/) ? "Upper" : "Lower" });
+            if (e.c == "⏎") acceptEntry({ n: e.n });
+            document.querySelector(".calc-display-backing").innerHTML = e.n;
+            _uz.key.sel = 0;
+            delete _uz.key.exp;
+        } else setTimeout(() => {
+            if (e.c) {
+                if (e.c.length < 4) {
+                    if (!_uz.keys[e.c]) {
+                        e.c = _uz.keys[e.c.toUpperCase()].toLowerCase();
+                    } else e.c = _uz.keys[e.c];
+                }
+                e.c = e.c[_uz.key.sel];
+                e.n = e.n + (e.c == "_" ? " " : e.c);
+                document.querySelector(".calc-display-backing").innerHTML = e.n;
+            }
+            _uz.key.sel = 0;
+            delete _uz.key.char;
+            delete _uz.key.exp;
+        }, 420);
+    },
+    _uz = {
+        key: { sel: 0 }, e: document.querySelector(".calc-close"),
+        keys: {
+            BC1: "ABC1",
+            EF2: "DEF2",
+            HI3: "GHI3",
+            KL4: "JKL4",
+            NO5: "MNO5",
+            QR6: "PQR6",
+            TU7: "STU7",
+            WX8: "VWX8",
+            Z_9: "YZ_9",
+            "+=0": "-+=0",
+            ",*/": ".,*/",
+        }
+    };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: ["settings", "home", "options"], scroll: 0 });
+        });
+    };
+    _uz.e = document.getElementsByClassName("calc-button");
+    if (_uz.e) {
+        for (let k in _uz.e) {
+            if (_uz.e[k].className) {
+                _uz.e[k].addEventListener("touchstart", (e) => {
+                    if (e.touches.length === 1) {
+                        if (!_uz.key.exp) {
+                            _uz.key.exp = e.timeStamp + 420;
+                            tapKey(e);
+                        } else if (e.timeStamp <= _uz.key.exp) {
+                            e.preventDefault();
+                            if (!_uz.key.char || _uz.key.char == e.target.innerHTML) {
+                                _uz.key.sel++;
+                                _uz.key.sel = _uz.key.sel < 4 ? _uz.key.sel : 0;
+                            }
+                        }
+                        _uz.key.char = e.target.innerHTML;
+                    }
+                });
+                _uz.e[k].addEventListener("mouseup", (e) => {
+                    if (!_uz.key.touch) {
+                        if (e.detail !== 1) {
+                            if (e.detail > 1) {
+                                if (!_uz.key.char || _uz.key.char == e.target.innerHTML) {
+                                    _uz.key.sel++;
+                                    _uz.key.sel = _uz.key.sel < 4 ? _uz.key.sel : 0;
+                                }
+                            }
+                        } else tapKey(e);
+                        _uz.key.char = e.target.innerHTML;
+                    }
+                });
+            }
+        }
+    };
+    window.addEventListener("resize", () => {
+        onWindowResize({});
+    });
+    onWindowResize({});
+</script>

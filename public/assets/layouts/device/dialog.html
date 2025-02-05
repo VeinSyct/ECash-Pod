@@ -1,0 +1,73 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-display-cont">
+        <div class="calc-display-information" style="height: 50vh;"></div>
+    </div>
+    <div class="calc-buttons-cont op-buttons"></div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    _uz = { e: document.querySelector(".calc-close") };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: _uz.dialog.close.shells, scroll: _uz.dialog.close.index });
+        });
+    };
+    if (localStorage.dialog) {
+        document.onreadystatechange = () => {
+            _uz.e = document.querySelector(".op-buttons").getElementsByTagName("div");
+            if (_uz.dialog)
+                for (let k in _uz.e) {
+                    _uz.dialog.indexes = _uz.dialog.indexes ? _uz.dialog.indexes : [];
+                    if (_uz.e[k] && _uz.e[k].className && _uz.e[k].className.match(/(_button)/) && !_uz.dialog.indexes.includes(_uz.e[k].userIndex)) {
+                        _uz.e[k].userIndex = _uz.e[k].className.split(" ")[0].replace("_button-","");
+                        _uz.dialog.indexes.push(_uz.e[k].userIndex);
+                        _uz.e[k].addEventListener("click", (e) => {
+                            loadPage({ shells: _uz.dialog.actions[e.target.userIndex].shells, scroll: _uz.dialog.actions[e.target.userIndex].index });
+                        });
+                    };
+                };
+        };
+        try {
+            _uz.dialog = JSON.parse(localStorage.dialog);
+            _uz.e = document.querySelector(".calc-display-information");
+            _uz.e.innerHTML = _uz.dialog.message;
+            _uz.e = document.querySelector(".calc-buttons-cont");
+            _uz.e.innerHTML = _uz.dialog.buttons;
+            _uz.e = document.getElementsByClassName("calc-button");
+        } catch (error) {}
+    }
+</script>

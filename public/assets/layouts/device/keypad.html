@@ -1,0 +1,205 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-back calc-red-button">❮ Back</div>
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+    <div class="calc-display-cont">
+        <div class="calc-display-backing">0</div>
+    </div>
+    <div class="calc-landscape" hidden>
+        <div class="calc-keypad">
+            <div class="calc-button">1</div>
+            <div class="calc-button">2</div>
+            <div class="calc-button">3</div>
+            <div class="calc-button">4</div>
+            <div class="calc-button">5</div>
+            <div class="calc-button calc-black-button">✖</div>
+            <div class="calc-button calc-black-button">⌫</div>
+        </div>
+        <div class="calc-keypad">
+            <div class="calc-button">6</div>
+            <div class="calc-button">7</div>
+            <div class="calc-button">8</div>
+            <div class="calc-button">9</div>
+            <div class="calc-button">0</div>
+            <div class="calc-button">.</div>
+            <div class="calc-button calc-red-button">➤</div>
+        </div>
+    </div>
+    <div class="calc-portrait" hidden>
+        <div class="calc-keypad">
+            <div class="calc-button">1</div>
+            <div class="calc-button">2</div>
+            <div class="calc-button">3</div>
+            <div class="calc-button calc-black-button">⌫</div>
+        </div>
+        <div class="calc-keypad">
+            <div class="calc-button">4</div>
+            <div class="calc-button">5</div>
+            <div class="calc-button">6</div>
+            <div class="calc-button calc-black-button">✖</div>
+        </div>
+        <div class="calc-keypad">
+            <div class="calc-button">7</div>
+            <div class="calc-button">8</div>
+            <div class="calc-button">9</div>
+            <div class="calc-button">.</div>
+        </div>
+        <div class="calc-keypad">
+            <div class="calc-button">0</div>
+            <div class="calc-button calc-red-button">➤</div>
+        </div>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    onWindowResize = (d) => {
+        d.o = window.innerWidth > window.innerHeight;
+        document.querySelector(`.calc-landscape`).style.display = d.o ? "block" : "none";
+        document.querySelector(`.calc-portrait`).style.display = d.o ? "none" : "block";
+    },
+    acceptDigit = (d) => {
+        if (localStorage.user && localStorage.beneficiary && localStorage.balance) {
+            d.beneficiary = JSON.parse(localStorage.beneficiary);
+            d.currency = JSON.parse(localStorage.user).currency;
+            localStorage.removeItem("transfer");
+            if (parseFloat(d.n) > 0 ) {
+                if (parseFloat(d.n) <= parseFloat(localStorage.balance.replace(/,/g,"").match(/\d+/g).toString().replace(",","."))) {
+                    localStorage.dialog = JSON.stringify({
+                        message: `
+                            Do you want to transfer <strong>${d.currency} ${d.n}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>?`,
+                        buttons: `
+                            <div class="_button-back calc-button">❮ Back</div>
+                            <div class="_button-transfer calc-button calc-red-button">Transfer ➔</div>`,
+                        actions: {
+                            back: {
+                                shells: ["keypad"],
+                                index: 0
+                            },
+                            transfer: {
+                                shells: ["showqr"],
+                                index: 0
+                            }
+                        },
+                        close: {
+                            shells: ["keypad"],
+                            index: 0
+                        }
+                    });
+                    localStorage.transfer = JSON.stringify({
+                        currency: d.currency,
+                        amount: d.n
+                    });
+                } else localStorage.dialog = JSON.stringify({
+                    message: `
+                        You do not have enough balance to transfer <strong>${d.currency} ${d.n}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>`,
+                    buttons: `
+                        <div class="_button-back calc-button calc-black-button">❮ Back</div>
+                        <div class="_button-cancel calc-button ">✖ Cancel</div>`,
+                    actions: {
+                        back: {
+                            shells: ["keypad"],
+                            index: 0
+                        },
+                        cancel: {
+                            shells: ["settings", "home", "options"],
+                            index: 1
+                        }
+                    },
+                    close: {
+                        shells: ["keypad"],
+                        index: 0
+                    }
+                });
+            } else localStorage.dialog = JSON.stringify({
+                message: `
+                    You can not transfer an invalid amount!`,
+                buttons: `
+                    <div class="_button-back calc-button calc-black-button">❮ Back</div>
+                    <div class="_button-cancel calc-button ">✖ Cancel</div>`,
+                actions: {
+                    back: {
+                        shells: ["keypad"],
+                        index: 0
+                    },
+                    cancel: {
+                        shells: ["settings", "home", "options"],
+                        index: 1
+                    }
+                },
+                close: {
+                    shells: ["keypad"],
+                    index: 0
+                }
+            });
+            loadPage({ shells: ["dialog"], scroll: 0 });
+        }
+    },
+    _uz = { e: document.querySelector(".calc-back") };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: ["scanqr"], scroll: 0 });
+        });
+    };
+    _uz = { e: document.querySelector(".calc-close") };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            loadPage({ shells: ["settings", "home", "options"], scroll: 2 });
+        });
+    };
+    _uz.e = document.getElementsByClassName("calc-button")
+    if (_uz.e) {
+        for (let k in _uz.e) {
+            if (_uz.e[k].className)
+                _uz.e[k].addEventListener("click", (e) => {
+                    e.c = e.target.innerHTML;
+                    e.n = document.querySelector(".calc-display-backing").innerHTML;
+                    if (e.c && e.c.match(/(⌫|✖|➤)/)) {
+                        if (e.c == "⌫") e.n = e.n.slice(0, e.n.length - 1);
+                        if (e.c == "✖") e.n = "0";
+                        if (e.c == "➤") acceptDigit({ n: e.n });
+                        // 
+                    } else {
+                        if (e.c == ".") e.n = e.n.replace(".","");
+                        e.n = (e.n == "0" ? "" : e.n) + e.c;
+                    }
+                    document.querySelector(".calc-display-backing").innerHTML = e.n;
+                });
+        }
+    };
+    window.addEventListener("resize", () => {
+        onWindowResize({});
+    });
+    onWindowResize({});
+</script>

@@ -1,0 +1,66 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <div class="calc-close calc-red-button">✖︎</div>
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+</div>
+<div class="calc-center">
+    <div class="calc-display-query">
+        <div>
+            <span class="queries-cont"></span>
+            <div>
+                <input type="text"
+                    ontouchend="this.focus()"
+                    onmouseup="if(!_uz.touch) this.focus()"
+                    onkeyup="if(event.keyCode === 13){sendQuery({ m: this.value }); this.value = ''}"
+                    placeholder="Type queries here..." />
+                <div onclick="sendQuery({ m: document.body.getElementsByTagName('input')[0].value }); document.body.getElementsByTagName('input')[0].value = ''">➤</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    _uz = { e: document.querySelector(".calc-close"), touch: window.matchMedia("(any-hover: none)").matches };
+    if (_uz.e) {
+        _uz.e.addEventListener("click", (e) => {
+            window.parent.postMessage({
+                id: window.frameElement.id,
+                action: "restore-shells",
+                tag: "iframe"
+            });
+        });
+    };
+</script>
+<script src="assets/js/queries.js"></script>
+<script src="assets/js/query.js"></script>

@@ -1,0 +1,52 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+</div>
+<div class="calc-center">
+    <div class="calc-range" style="width: 64vw;">
+        <input class="calc-range-slider" type="range" value="0" step=".01" min="0" max="100"/>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    };
+    _uz = {};
+    document.querySelector(".calc-range-slider").addEventListener("change", (e) => {
+        if (e.target.value > 90) {
+            loadPage({ shells: ["settings", "home", "options"], scroll: 1 });
+        } else e.target.value = 0;
+    });
+    if (localStorage.transactions) _uz.tx = localStorage.transactions;
+    localStorage.clear();
+    if (_uz.tx) localStorage.transactions = _uz.tx;
+</script>

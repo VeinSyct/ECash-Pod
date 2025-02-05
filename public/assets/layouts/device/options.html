@@ -1,0 +1,54 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+</div>
+<div class="calc-center">
+    <div class="calc-buttons-cont op-buttons" style="width: 90vw;">
+        <div class="calc-button showqr calc-black-button"><i class="fa fa-qrcode"></i> Show QR</div>
+        <div class="calc-button scanqr calc-red-button"><i class="fa fa-object-group"></i> Scan QR</div>
+        <div class="calc-button transactions" style="display: none;"><i class="fa fa-file-text-o"></i> Transactions</div>
+    </div>
+</div>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    _uz = { e: document.querySelector(".op-buttons").getElementsByTagName("div") };
+    for (let k in _uz.e) {
+        if (_uz.e[k] && _uz.e[k].className) {
+            if (_uz.e[k].className.match(/(transactions)/) && localStorage.transactions) _uz.e[k].style.display = "block";
+            _uz.e[k].addEventListener("click", (e) => { 
+                loadPage({ shells: _uz.e[k].className.match(/(showqr)/) ? ["showqr"] : _uz.e[k].className.match(/(scanqr)/) ? ["scanqr"] : ["transactions"], scroll: 0 });
+            });
+        };
+    };
+</script>

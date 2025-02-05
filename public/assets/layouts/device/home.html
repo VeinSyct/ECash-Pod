@@ -1,0 +1,54 @@
+<meta name="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable = 0, viewport-fit = cover, shrink-to-fit = no">
+<link rel="stylesheet" href="assets/css/style.css">
+<div class="calc-main-container">
+    <header>
+        <h2>Eℂash Pod</h2>
+    </header>
+</div>
+<div class="calc-center">
+    <div class="calc-display-cont calc-display-contain">
+        <div class="calc-display-backing"></div>
+    </div>    
+</div>
+<div class="calc-loading"></div>
+<div id="api-404" hidden></div>
+<script src="./assets/js/index.js"></script>
+<script>
+    let loadPage = (d) => {
+        d.e = "";
+        for (let i = 0, j = d.shells; i < j.length; i++) {
+            d.e += shellFrame({
+                i: i,
+                f: (Math.random() + 1).toString(36).substring(7),
+                s: j[i]
+            })
+        }
+        window.parent.postMessage({
+            id: window.frameElement.id,
+            action: "load-shells",
+            tag: "iframe",
+            shell: d.e,
+            scroll: d.scroll
+        });
+    },
+    shellFrame = (d) => {
+        return`
+            <div id="shell-${d.i}">
+                <div>
+                    <div>
+                        <div class="lcd-effects-on"><div class="back-grid"></div></div>
+                        <iframe id="iframe-${d.f}" src="assets/layouts/device/${d.s}"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br />`;
+    },
+    openApp = (d) => {
+        readBalance();
+    };
+    _uz.z = { qrScan: { arr: [], hashes: [] }, digit: { height: 12 }, slider: { single: {} } };
+    _uz.qr = { length: 72, delay: 128, interval: 0, hash: "9h65t34t31p7s&83*4392*81839e5c732a8181sh232%ic421o232n490s$321w23e59b$a472p921p" };
+    document.getElementById("api-404").appendChild(_uz.api);
+    _uz.qrhash({ hash: _uz.qr.hash });
+    document.querySelector(".calc-loading").style.display = "block";
+</script>
