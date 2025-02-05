@@ -2,7 +2,7 @@
 Electronic Cash Pod - Source Code is free for all to use for the electronic cash development.
 
 
-What is the ECash Pod?
+# What is the ECash Pod?
 
 This is a sample working electronic cash platform (pod) complete source code for the web developers to study and develop their own electronic cash platform (for simplicity refer to the [ECash](https://github.com/VeinSyct/Electronic-Cash) describing in full details how to create and transfer electronic cash).
 
@@ -14,15 +14,15 @@ The ECash Pod is an offline electronic cash platform that is purposed to replace
 [Watch](https://www.youtube.com/embed/aaOUo0gZY4s)
 
 
-Where does ECash comes from?
+# Where does ECash comes from?
 The ECash supply will be distributed by the agreement of collective entities to create the electronic cash from the borrowers requests (loan) or government bonds. The collective entities agreements will assembly the eletronic cash data (the source code is separated among the collective entities so no one entity is capable of creating an electronic cash), the collective agreement democaratic processes ensure the existence of a certain borrower or bond that gives the value of the electronic cash. The collective entities are the financial intitution, the bank(s), Central Bank of a country, public office (local government office) and private contractor(s) to maintain, ensure or recover the electronic cash should the borrowers defaulted.
 
 
-How do I do testings?
+# How do I do testings?
 For development and testings of your electronic cash platform, use the [Dummy ecash supply](https://ecash-dummy.web.app/) to create and transfer ecash between users.
 
 
-How do I use the repository?
+# How do I use the repository?
 Download the public folder and use Live Server to open the sample ECash Pod.
 
 
