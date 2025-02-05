@@ -3,7 +3,7 @@ Electronic Cash Pod - Source Code is free for all to use for the electronic cash
 
 What is the ECash Pod?
 
-This is a sample working electronic cash complete source code for the web developers to study to develop their own electronic cash platform, for simplicity refer to the [ECash](https://github.com/VeinSyct/Electronic-Cash) describing in full details how to create and transfer electronic cash.
+This is a sample working electronic cash platform (pod) complete source code for the web developers to study to develop their own electronic cash platform, for simplicity refer to the [ECash](https://github.com/VeinSyct/Electronic-Cash) describing in full details how to create and transfer electronic cash.
 
 The ECash Pod is an offline electronic cash platform that is purposed to replace paper money, to facilitate remote electronic economies (on or off planet), the (your) platform will facilitate the transfer of electronic cash from benefactor to beneficiary, the operator(s) will operate the electronic cash platform by distributing the electronic cash services allowing the circulation of electronic cash among users (ECash pod users / owners). 
 
