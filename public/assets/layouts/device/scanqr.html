@@ -77,7 +77,12 @@
     };
     window.onScan = function(s) {
         if (!_uz.z.qrScan.arr.includes(s)) {
-            _uz.z.qrScan.arr.push(s);
+            s = s.replace(/[!\"#$%&]/g, ",").split(",");
+            let j = s[0];
+            s = s.join(",");
+            for (let i = 81; i <= 90; i++)
+                s = s.replace(new RegExp(String.raw`${String.fromCharCode(i)}`, "g"), String.fromCharCode(i - 33));
+            _uz.z.qrScan.arr.push(j + s.slice(j.length));
             for (let i = 0, j; i < _uz.z.qrScan.arr.length; i++) {
                 j = _uz.z.qrScan.arr[i].split(",");
                 _uz.z.qrScan.hashes[j[2]] = j[0];
