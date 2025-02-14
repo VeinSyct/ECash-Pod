@@ -7,6 +7,14 @@
 </div>
 <div class="calc-center">
     <div class="calc-range" style="width: 64vw;">
+        <style>
+            input[type=range] {
+                pointer-events: none;
+            }
+            input[type=range]::-webkit-slider-thumb {
+                pointer-events: auto;
+            }
+        </style>
         <input class="calc-range-slider" type="range" value="0" step=".01" min="0" max="100"/>
     </div>
 </div>
@@ -43,6 +51,7 @@
     _uz = {};
     document.querySelector(".calc-range-slider").addEventListener("change", (e) => {
         if (e.target.value > 90) {
+            e.target.value = 0;
             loadPage({ shells: ["settings", "home", "options"], scroll: 1 });
         } else e.target.value = 0;
     });
