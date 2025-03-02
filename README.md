@@ -11,7 +11,7 @@ The ECash Pod is an offline electronic cash platform that is purposed to replace
 
 ![image](https://github.com/user-attachments/assets/381c88a5-4ae4-49df-a260-f37733420e06)
 
-[Watch](https://www.youtube.com/embed/aaOUo0gZY4s)
+[Watch](https://www.youtube.com/embed/X6d0PaBXBVg)
 
 
 # Where does ECash comes from?
