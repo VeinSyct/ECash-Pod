@@ -93,9 +93,11 @@
         if (localStorage.user && localStorage.beneficiary && localStorage.balance) {
             d.beneficiary = JSON.parse(localStorage.beneficiary);
             d.currency = JSON.parse(localStorage.user).currency;
-            localStorage.removeItem("transfer");
+            delete localStorage.transfer;
             if (parseFloat(d.n) > 0 ) {
-                if (parseFloat(d.n) <= parseFloat(localStorage.balance.replace(/,/g,"").match(/\d+/g).toString().replace(",","."))) {
+                d.e = document.querySelector(".calc-display-backing")
+                d.e.innerHTML = localStorage.balance;
+                if (parseFloat(d.n) <= parseFloat(d.e.innerHTML.replace(/,/g,"").match(/\d+/g).toString().replace(",","."))) {
                     localStorage.dialog = JSON.stringify({
                         message: `
                             Do you want to transfer <strong>${d.currency} ${d.n}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>?`,
@@ -142,6 +144,7 @@
                         index: 0
                     }
                 });
+                d.e.innerHTML = "0";
             } else localStorage.dialog = JSON.stringify({
                 message: `
                     You can not transfer an invalid amount!`,
