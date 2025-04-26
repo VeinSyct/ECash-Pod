@@ -100,7 +100,7 @@
                 if (parseFloat(d.n) <= parseFloat(d.e.innerHTML.replace(/,/g,"").match(/\d+/g).toString().replace(",","."))) {
                     localStorage.dialog = JSON.stringify({
                         message: `
-                            Do you want to transfer <strong>${d.currency} ${d.n}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>?`,
+                            Do you want to transfer <strong>${d.currency} ${parseFloat(d.n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>?`,
                         buttons: `
                             <div class="_button-back calc-button">❮ Back</div>
                             <div class="_button-transfer calc-button calc-red-button">Transfer ➔</div>`,
@@ -125,7 +125,7 @@
                     });
                 } else localStorage.dialog = JSON.stringify({
                     message: `
-                        You do not have enough balance to transfer <strong>${d.currency} ${d.n}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>`,
+                        You do not have enough balance to transfer <strong>${d.currency} ${parseFloat(d.n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong> to <strong>${d.beneficiary[d.beneficiary.name != "N/A" ? "name" : "number"]}</strong>`,
                     buttons: `
                         <div class="_button-back calc-button calc-black-button">❮ Back</div>
                         <div class="_button-cancel calc-button ">✖ Cancel</div>`,
