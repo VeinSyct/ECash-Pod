@@ -47,7 +47,7 @@
     openApp = (d) => {
         if (localStorage.showqr) {
             createQr({ s: localStorage.showqr });
-            localStorage.removeItem("showqr");
+            delete localStorage.showqr;
             document.querySelector(".calc-loading").style.display = "none";
             _uz.actions = {
                 type: "show"
