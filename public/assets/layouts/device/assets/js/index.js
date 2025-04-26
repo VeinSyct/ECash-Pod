@@ -18,7 +18,7 @@ let windowEvent = (e) => {
         if (e.data.action && e.data.action.match(/(snap-scrolling)/)) {};
     } catch (error) {};
 },
-_uz = { api: document.createElement("iframe"), offline: !0, digilete: (e) => {return e.data.replace(/[0-9]/g, '').replace(/\*/g,'/').replace(/&/g,':').replace(/%/g,'-').replace(/\$/g,'.')} };
+_uz = { api: document.createElement("iframe"), digilete: (e) => {return e.data.replace(/[0-9]/g, '').replace(/\*/g,'/').replace(/&/g,':').replace(/%/g,'-').replace(/\$/g,'.')} };
 let readBalance = () => {
     _uz.api.contentWindow.postMessage({ action: "ecash-api-read-balance" }, _uz.api.src);
 };
@@ -104,7 +104,7 @@ let apiResponses = (data) => {
             if (d.l) {
                 if (d.r && d.l.received > 0) {
                     localStorage.dialog = JSON.stringify({
-                        message: `${(d.l.currency ? `<strong>${d.l.currency}${d.l.received}</strong>` : `No`)} electronic cash has been transferred into your account ${(d.l.ratio && d.l.ratio < 1 ? ` and <strong>${(100 - parseFloat(d.l.ratio) * 100).toFixed(0)}%</strong> counterfiet is rejected!` : "")}`,
+                        message: `${(d.l.currency ? `<strong>${d.l.currency}${d.l.received.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>` : `No`)} electronic cash has been transferred into your account ${(d.l.ratio && d.l.ratio < 1 ? ` and <strong>${(100 - parseFloat(d.l.ratio) * 100).toFixed(0)}%</strong> counterfiet is rejected!` : "")}`,
                         buttons: `
                             <div class="_button-back calc-button ">❮ Back</div>
                             <div class="_button-dismiss calc-button calc-red-button">Dismiss</div>`,
@@ -134,7 +134,7 @@ let apiResponses = (data) => {
                         number: d.s.account,
                         hash: d.j,
                         currency: d.l.currency,
-                        amount: d.l.received,
+                        amount: d.l.received.toFixed(2),
                         date: new Date().getDay() + " " + getTime({}) + ", " + getDate({}),
                     }
                     localStorage.transactions = JSON.stringify(d.tx);
