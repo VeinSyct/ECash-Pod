@@ -42,14 +42,14 @@
     },
     listCurrency = (d) => {
         for (let k in _uz.language) {
-            d.dom += `<div class="calc-button ${k.match(/(USD|EUR|AED|PHP)/) ? "calc-red-button" : ""}" onclick="currencyChanged({ currency: this.innerHTML })">${k}</div>`;
+            d.dom += `<div class="calc-button ${k.match(/(USD|EUR|AED|PHP)/) ? "calc-red-button" : ""}" onclick="changeCurrency({ currency: this.innerHTML })">${k}</div>`;
             if (d.i > d.m) d.dom += `</div><div class="calc-keypad">`;
             d.i = d.i > d.m ? 0 : d.i + 1;
         }
         d.e = document.querySelector(".calc-currency-cont");
         if (d.e) d.e.innerHTML = `<div class="calc-keypad">${d.dom}</div>`;
     },
-    currencyChanged = (d) => {
+    changeCurrency = (d) => {
         localStorage.entry = JSON.stringify({ currency: d.currency });
         localStorage.dialog = JSON.stringify({
             message: `
