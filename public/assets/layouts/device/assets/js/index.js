@@ -3,13 +3,18 @@ let windowEvent = (e) => {
         _uz.session = !_uz.session ? e.data.session : _uz.session;
         if (e.data.action && e.data.action.match(/(ecash-api)/)) {
             if (e.data.action.match(/(ready)/)) {
-                openApp({});
+                try {
+                    openApp({});
+                } catch (error) {}
             };
             if (e.data.action.match(/(response)/)) {
                 apiResponses({ data: e.data });
             };
         };
-        if (e.data.action && e.data.action.match(/(update-content)/)) openApp({});
+        if (e.data.action && e.data.action.match(/(update-content)/))
+            try {
+                openApp({});
+            } catch (error) {}
         if (e.data.action && e.data.action.match(/(snap-scrolling)/)) {};
     } catch (error) {};
 },
@@ -32,11 +37,6 @@ let apiResponses = (data) => {
         document.querySelector(".account-name").innerHTML = data.account.name ? data.account.name : "N/A";
         for (let i = 0, j = ["number", "protocol", "currency"]; i < j.length; i++)
             document.querySelector(".account-" + j[i]).innerHTML = data.account[j[i]] == "DMY" ? "(Dummy)" : data.account[j[i]] ? data.account[j[i]] : "USD";
-        localStorage.user = JSON.stringify({
-            currency: data.account.currency,
-            number: data.account.number,
-            name: data.account.name,
-        });
         if (localStorage.entry) {
             try {
                 _uz.entry = JSON.parse(localStorage.entry);
@@ -46,10 +46,15 @@ let apiResponses = (data) => {
                 _uz.entry.object[(_uz.entry.name ? "name" : "currency")] = _uz.entry[(_uz.entry.name ? "name" : "currency")];
                 _uz.api.contentWindow.postMessage(_uz.entry.object, _uz.api.src);
                 if (_uz.entry.name) document.querySelector(".account-name").innerHTML = _uz.entry[(_uz.entry.name ? "name" : "currency")];
-                delete _uz.entry;
-                localStorage.removeItem("entry");
+                delete localStorage.entry;
             } catch (error) {}
         };
+        localStorage.user = JSON.stringify({
+            currency: _uz.entry && _uz.entry.currency ? _uz.entry.currency : data.account.currency,
+            name: _uz.entry && _uz.entry.name ? _uz.entry.name : data.account.name,
+            number: data.account.number
+        });
+        delete _uz.entry;
     };
     if (data.action && data.action.match(/(hash-account)/)) {
         document.querySelector(".calc-loading").style.display = "none";
@@ -133,6 +138,7 @@ let apiResponses = (data) => {
                         date: new Date().getDay() + " " + getTime({}) + ", " + getDate({}),
                     }
                     localStorage.transactions = JSON.stringify(d.tx);
+                    if (d.l.currency) localStorage.entry = JSON.stringify({ currency: d.l.currency });
                 } else localStorage.dialog = JSON.stringify({
                     message: `
                         Electronic cash is spent`,
@@ -190,13 +196,13 @@ let apiResponses = (data) => {
         if (localStorage.beneficiary) {
             try {
                 data.b = JSON.parse(localStorage.beneficiary);
-                localStorage.removeItem("beneficiary");
+                delete localStorage.beneficiary;
             } catch (error) {}
         }
         if (localStorage.transfer) {
             try {
                 data.t = JSON.parse(localStorage.transfer);
-                localStorage.removeItem("transfer");
+                delete localStorage.transfer;
             } catch (error) {}
         }
         data.tx[(Math.random() + 1).toString(36).substring(7)] = {
