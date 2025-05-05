@@ -1,5 +1,5 @@
 # ECash-Pod
-Electronic Cash Pod - Source Code is free for all to use for the electronic cash development. To learn better how to develop your electronic cash platform go to the [tutorials](https://github.com/VeinSyct/ECash-Tutorial)
+Electronic Cash Pod - Source Code is free for all to use for the electronic cash development. To learn better how to develop your electronic cash platform go to the [tutorials](https://github.com/VeinSyct/ECash-Tutorial) or download the [electronic cash module](https://github.com/VeinSyct/ECash-Module/tree/main/module-ecash/supply) to start developing your electronic cash platforms.
 
 
 # What is the ECash Pod?
