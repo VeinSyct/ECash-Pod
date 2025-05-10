@@ -57,7 +57,7 @@
     txCard = (d) => {
         return`
             <div id="down-${d.k}" class="calc-transaction-cont" onclick="setTimeout(() => { if (!_uz.download) document.getElementById('${d.k}').style.display='flex' }, 120)">
-                <h1 class="icon-button" onclick="">${d.tx.currency} ${d.tx.amount}</h1>
+                <h1 class="icon-button" onclick="">${d.tx.currency} ${`${d.tx.amount}`.replace(/(\.\d{2})\d+$/, '$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h1>
                 <h3><i class="fa fa-user"></i> ${d.tx.incoming ? "From" : "To"} <strong>${d.tx.name}</strong></h3>
                 <p><i class="fa fa-credit-card"></i> <strong>${d.tx.number}</strong></p>
                 <p>Date: <strong>${d.tx.date}</strong></p>
