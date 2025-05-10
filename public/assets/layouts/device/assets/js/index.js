@@ -104,7 +104,7 @@ let apiResponses = (data) => {
             if (d.l) {
                 if (d.r && d.l.received > 0) {
                     localStorage.dialog = JSON.stringify({
-                        message: `${(d.l.currency ? `<strong>${d.l.currency}${d.l.received.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>` : `No`)} electronic cash has been transferred into your account ${(d.l.ratio && d.l.ratio < 1 ? ` and <strong>${(100 - parseFloat(d.l.ratio) * 100).toFixed(0)}%</strong> counterfiet is rejected!` : "")}`,
+                        message: `${(d.l.currency ? `<strong>${d.l.currency}${`${`${d.l.received}`.replace(/(\.\d{2})\d+$/, '$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`}</strong>` : `No`)} electronic cash has been transferred into your account ${(d.l.ratio && d.l.ratio < 1 ? ` and <strong>${(100 - parseFloat(d.l.ratio) * 100).toFixed(0)}%</strong> counterfiet is rejected!` : "")}`,
                         buttons: `
                             <div class="_button-back calc-button ">❮ Back</div>
                             <div class="_button-dismiss calc-button calc-red-button">Dismiss</div>`,
@@ -134,7 +134,7 @@ let apiResponses = (data) => {
                         number: d.s.account,
                         hash: d.j,
                         currency: d.l.currency,
-                        amount: d.l.received.toFixed(2),
+                        amount: d.l.received,
                         date: new Date().getDay() + " " + getTime({}) + ", " + getDate({}),
                     }
                     localStorage.transactions = JSON.stringify(d.tx);
