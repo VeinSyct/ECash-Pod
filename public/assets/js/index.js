@@ -16,7 +16,7 @@ onScrolling = (e) => {
     clearTimeout(e.target.scrollTimeout);
     e.target.scrollTimeout = setTimeout(() => {
         e.o = document.body.clientWidth > document.body.clientHeight && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        _uz.s = parseInt(e.target["scroll" + (e.o ? "Left" : "Top")] / parseInt(window.getComputedStyle(document.body)[e.o ? "width" : "height"]));
+        _uz.s = parseInt(e.target["scroll" + (e.o ? "Left" : "Top")] / (parseInt(window.getComputedStyle(document.body)[e.o ? "width" : "height"]) - 3));
         e.d = document.getElementById("shell-" + _uz.s).getElementsByTagName("iframe")[0];
         if (e.d) {
             if (_uz.p != _uz.s) {
@@ -24,7 +24,9 @@ onScrolling = (e) => {
                 _uz.q = _uz.q ? _uz.q : [];
                 if (!_uz.q.includes(_uz.p)) _uz.q.push(_uz.p);
                 e.d.contentWindow.postMessage({ action: "update-content" });
-            } else {
+                delete _uz.scrolling;
+            } else if(!_uz.scrolling){
+                _uz.scrolling = !0;
                 for (let i = 0; i < _uz.q.length; i++) {
                     e.d = document
                     .getElementById("shell-" + _uz.q[i])
