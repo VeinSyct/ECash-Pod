@@ -29,9 +29,9 @@ let readAccount = () => {
 _uz = Object.assign(_uz, { qrhash: (e) => _uz.api.src = _uz.digilete({ data: e.hash }) });
 let apiResponses = (data) => {
     data = data.data;
-    if (data.action && data.action.match(/(read-balance)/)) {
+    if (data.action && data.action.match(/(read-balance|locked)/)) {
         document.querySelector(".calc-loading").style.display = "none";
-        document.querySelector(".calc-display-backing").innerHTML = localStorage.balance = data.balance != "Err706" ? data.balance.replace("DMY", "(Dummy)") : `<span>Error: <strong class="calc-alert blink">Tampered!</strong></span>`;
+        document.querySelector(".calc-display-backing").innerHTML = localStorage.balance = data.balance != "Err706" && !data.action.match(/(locked)/) ? data.balance.replace("DMY", "(Dummy)") : `<span>Error: <strong class="calc-alert blink">${data.action.match(/(locked)/) ? "Denied" : "Tampered"}!</strong></span>`;
     };
     if (data.action && data.action.match(/(read-account)/)) {
         document.querySelector(".account-name").innerHTML = data.account.name ? data.account.name : "N/A";
