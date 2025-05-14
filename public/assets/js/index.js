@@ -82,7 +82,7 @@ for (let k in _uz.e) {
                 if (_uz.c) {
                     _uz.restore = {
                         shells: _uz.c.innerHTML,
-                        scroll: _uz.s + 1
+                        scroll: _uz.s
                     }
                     _uz.s = 0;
                     _uz.c.innerHTML = `
