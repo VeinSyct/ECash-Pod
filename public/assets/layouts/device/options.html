@@ -46,8 +46,9 @@
     for (let k in _uz.e) {
         if (_uz.e[k] && _uz.e[k].className) {
             if (_uz.e[k].className.match(/(transactions)/) && localStorage.transactions) _uz.e[k].style.display = "block";
-            _uz.e[k].addEventListener("click", (e) => { 
+            _uz.e[k].addEventListener("click", (e) => {
                 loadPage({ shells: _uz.e[k].className.match(/(showqr)/) ? ["showqr"] : _uz.e[k].className.match(/(scanqr)/) ? ["scanqr"] : ["transactions"], scroll: 0 });
+                delete localStorage.digit;
             });
         };
     };
