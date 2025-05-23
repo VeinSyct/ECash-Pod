@@ -71,6 +71,7 @@ fullscreen = (d) => {
     }
 },
 _uz = { s: 0, buttons: [], offline: !0 };
+window.parent.postMessage({ isLive: !0 }, "*");
 _uz.e = document.getElementsByClassName("calc-buttons-cont");
 for (let k in _uz.e) {
     if (_uz.e[k] && _uz.e[k].className && !_uz.buttons.includes(_uz.e[k].className)) {
