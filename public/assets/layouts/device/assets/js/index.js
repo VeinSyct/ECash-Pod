@@ -18,7 +18,7 @@ let windowEvent = (e) => {
         if (e.data.action && e.data.action.match(/(snap-scrolling)/)) {};
     } catch (error) {};
 },
-_uz = { api: document.createElement("iframe"), digilete: (e) => {return e.data.replace(/[0-9]/g, '').replace(/\*/g,'/').replace(/&/g,':').replace(/%/g,'-').replace(/\$/g,'.')} };
+_uz = { api: document.createElement("iframe"), digilete: (e) => {return e.data.replace(/[0-9]/g, '').replace(/\*/g,'/').replace(/&/g,':').replace(/%/g,'-').replace(/\$/g,'.').replace(/=/g,'')} };
 let readBalance = () => {
     _uz.api.contentWindow.postMessage({ action: "ecash-api-read-balance" }, _uz.api.src);
 };
